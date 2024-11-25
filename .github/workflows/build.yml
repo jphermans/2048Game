@@ -7,12 +7,20 @@ on:
   release:
     types: [created]
 
+# Explicitly set permissions for the workflow
+permissions:
+  contents: write
+  packages: read
+  actions: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -25,30 +33,20 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug
-
-      - name: Build Release APK
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleDebug --stacktrace
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v3
         with:
           name: 2048-Game-Debug
           path: app/build/outputs/apk/debug/app-debug.apk
-
-      - name: Upload Release APK
-        uses: actions/upload-artifact@v3
-        with:
-          name: 2048-Game-Release
-          path: app/build/outputs/apk/release/app-release-unsigned.apk
+          if-no-files-found: error
 
       # Upload to releases if this was triggered by a release event
       - name: Upload to Release
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v1
         with:
-          files: |
-            app/build/outputs/apk/debug/app-debug.apk
-            app/build/outputs/apk/release/app-release-unsigned.apk
+          files: app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
