@@ -22,6 +22,24 @@ A modern implementation of the classic 2048 puzzle game for Android devices, bui
 5. The game is won when a tile with the value 2048 is created
 6. The game is over when no more moves are possible
 
+## Installation
+
+### F-droid
+To install from F-droid:
+1. Open F-droid and search for "2048 Game"
+2. Click Install
+
+### Obtainium
+To install using Obtainium:
+1. Open Obtainium
+2. Add new app
+3. Select "GitHub"
+4. Enter repository URL: `YOUR_GITHUB_REPO_URL`
+5. Select the latest release
+
+### Manual Installation
+Download the latest APK from the [Releases](../../releases) page.
+
 ## Technical Details
 
 - Built with Kotlin

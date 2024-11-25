@@ -1,0 +1,18 @@
+2048 is an engaging puzzle game where you combine numbered tiles by sliding them in different directions. The goal is to reach the 2048 tile!
+
+Features:
+• Smooth swipe controls for easy gameplay
+• Score tracking with high score persistence
+• Clean, modern material design UI
+• Multiple merges in a single move
+• Game state persistence
+• Responsive grid layout
+
+How to Play:
+1. Swipe in any direction (up, down, left, right) to move all tiles
+2. When two tiles with the same number touch, they merge into one tile with the sum of their values
+3. After each move, a new tile with a value of 2 or 4 appears
+4. Try to create a tile with the value 2048 to win!
+5. The game is over when no more moves are possible
+
+This is a free and open source implementation of the classic 2048 game, built with modern Android development practices.
