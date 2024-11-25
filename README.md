@@ -2,6 +2,8 @@
 
 A modern implementation of the classic 2048 puzzle game for Android devices, built with Kotlin.
 
+![2048 Game Screenshot](2048.png)
+
 ## Features
 
 - Smooth swipe controls
