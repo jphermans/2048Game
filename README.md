@@ -34,7 +34,7 @@ To install using Obtainium:
 1. Open Obtainium
 2. Add new app
 3. Select "GitHub"
-4. Enter repository URL: `YOUR_GITHUB_REPO_URL`
+4. Enter repository URL: `https://github.com/jphermans/2048Game`
 5. Select the latest release
 
 ### Manual Installation
