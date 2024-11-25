@@ -5,14 +5,14 @@ plugins {
 
 android {
     namespace = "org.jphsystems.a2048game"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "org.jphsystems.a2048game"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
