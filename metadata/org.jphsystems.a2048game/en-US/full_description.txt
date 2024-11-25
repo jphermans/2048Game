@@ -1,0 +1,18 @@
+2048 Game is a modern implementation of the classic sliding puzzle game for Android. Combine tiles with the same numbers by swiping in any direction to reach the elusive 2048 tile!
+
+Features:
+• Smooth swipe controls
+• Clean, modern UI
+• Score tracking
+• Multiple merges in a single move
+• Save game state
+• Undo functionality
+• Animations for tile movements
+
+How to Play:
+1. Swipe up, down, left, or right to move all tiles
+2. When two tiles with the same number touch, they merge into one
+3. After each move, a new tile appears
+4. Keep combining tiles to reach 2048!
+
+The game saves automatically, so you can always continue where you left off. Challenge yourself to reach higher scores and larger numbers!

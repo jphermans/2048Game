@@ -1,0 +1,1 @@
+A modern, clean implementation of the classic 2048 puzzle game with smooth controls and animations.
