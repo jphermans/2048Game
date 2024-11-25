@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- Game Colors -->
+    <color name="background">#FAF8EF</color>
+    <color name="grid_background">#BBADA0</color>
+    <color name="text_dark">#776E65</color>
+    <color name="text_light">#F9F6F2</color>
+    <color name="button_background">#8F7A66</color>
+    
+    <!-- Tile Colors -->
+    <color name="tile_2">#EEE4DA</color>
+    <color name="tile_4">#EDE0C8</color>
+    <color name="tile_8">#F2B179</color>
+    <color name="tile_16">#F59563</color>
+    <color name="tile_32">#F67C5F</color>
+    <color name="tile_64">#F65E3B</color>
+    <color name="tile_128">#EDCF72</color>
+    <color name="tile_256">#EDCC61</color>
+    <color name="tile_512">#EDC850</color>
+    <color name="tile_1024">#EDC53F</color>
+    <color name="tile_2048">#EDC22E</color>
+    
+    <!-- Text Colors for Tiles -->
+    <color name="tile_text_light">#776E65</color>  <!-- For tiles 2 and 4 -->
+    <color name="tile_text_dark">#F9F6F2</color>   <!-- For tiles 8 and up -->
+</resources>
