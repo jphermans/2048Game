@@ -13,11 +13,6 @@ permissions:
   packages: read
   actions: write
 
-name: Debug GPG
-  run: |
-    ls -la /home/runner/.gnupg
-    cat release.keystore.asc
-
 jobs:
   build:
     runs-on: ubuntu-latest
