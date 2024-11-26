@@ -11,8 +11,8 @@ android {
         applicationId = "org.jphsystems.a2048game"
         minSdk = 24
         targetSdk = 34
-        versionCode = 2
-        versionName = "1.0.1"
+        versionCode = 3
+        versionName = "1.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -44,6 +44,9 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation("androidx.activity:activity-ktx:1.8.2")
     implementation(libs.androidx.constraintlayout)
+    
+    // Konfetti - Confetti Library
+    implementation("nl.dionsegijn:konfetti-xml:2.0.4")
     
     // ViewModel and LiveData
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")

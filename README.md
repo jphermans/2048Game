@@ -12,6 +12,7 @@ A modern implementation of the classic 2048 puzzle game for Android devices, bui
 - Multiple merges in a single move
 - Game state persistence
 - Responsive grid layout
+- Celebratory confetti animation when you win!
 
 ## How to Play
 

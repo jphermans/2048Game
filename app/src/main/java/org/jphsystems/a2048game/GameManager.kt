@@ -270,7 +270,14 @@ class GameManager(context: Context) {
     }
 
     private fun hasWon(): Boolean {
-        return grid.any { row -> row.any { it >= WINNING_VALUE } }
+        for (i in 0 until GRID_SIZE) {
+            for (j in 0 until GRID_SIZE) {
+                if (grid[i][j] >= WINNING_VALUE) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     private fun isGameOver(): Boolean {

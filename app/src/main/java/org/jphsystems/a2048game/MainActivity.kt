@@ -15,6 +15,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GestureDetectorCompat
 import kotlin.math.abs
+import nl.dionsegijn.konfetti.xml.KonfettiView
+import nl.dionsegijn.konfetti.core.Angle
+import nl.dionsegijn.konfetti.core.Party
+import nl.dionsegijn.konfetti.core.Position
+import nl.dionsegijn.konfetti.core.Spread
+import nl.dionsegijn.konfetti.core.emitter.Emitter
+import nl.dionsegijn.konfetti.core.models.Size
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: GameViewModel by viewModels()
@@ -22,6 +30,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var scoreTextView: TextView
     private lateinit var highScoreTextView: TextView
     private lateinit var gameOverText: TextView
+    private lateinit var konfettiView: KonfettiView
+    private lateinit var titleTextView: TextView
     private val tiles = Array(4) { Array<TextView?>(4) { null } }
     private var lastMoveTime = 0L
     private val MOVE_DELAY = 150L // Minimum time between moves in milliseconds
@@ -41,6 +51,10 @@ class MainActivity : AppCompatActivity() {
         scoreTextView = findViewById(R.id.scoreTextView)
         highScoreTextView = findViewById(R.id.highScoreTextView)
         gameOverText = findViewById(R.id.gameOverText)
+        konfettiView = findViewById(R.id.konfettiView)
+        titleTextView = findViewById(R.id.titleTextView)
+
+        setupTitleLongPress()
 
         gameGrid.post {
             setupGrid()
@@ -135,6 +149,12 @@ class MainActivity : AppCompatActivity() {
         viewModel.gameOver.observe(this) { isGameOver ->
             gameOverText.visibility = if (isGameOver) View.VISIBLE else View.GONE
         }
+
+        viewModel.gameWon.observe(this) { isGameWon ->
+            if (isGameWon) {
+                celebrateWin()
+            }
+        }
     }
 
     private fun setupNewGameButton() {
@@ -180,5 +200,70 @@ class MainActivity : AppCompatActivity() {
         tile?.setBackgroundColor(ContextCompat.getColor(this, colorResId))
         tile?.setTextColor(ContextCompat.getColor(this, 
             if (value <= 4) R.color.tile_text_light else R.color.tile_text_dark))
+    }
+
+    private fun setupTitleLongPress() {
+        titleTextView.setOnLongClickListener { view ->
+            var pressStartTime = System.currentTimeMillis()
+            
+            view.setOnTouchListener { v, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        pressStartTime = System.currentTimeMillis()
+                        true
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        val pressDuration = System.currentTimeMillis() - pressStartTime
+                        if (pressDuration >= 5000) { // 5 seconds
+                            celebrateWin()
+                        }
+                        v.performClick()
+                        false
+                    }
+                    else -> false
+                }
+            }
+            true
+        }
+    }
+
+    private fun celebrateWin() {
+        // Create multiple party sources for full screen coverage
+        val leftParty = Party(
+            speed = 0f,
+            maxSpeed = 30f,
+            damping = 0.9f,
+            spread = Spread.WIDE,
+            colors = listOf(0xfce18a, 0xff726d, 0xf4306d, 0xb48def),
+            position = Position.Relative(0.0, 0.0),
+            emitter = Emitter(duration = 2000, TimeUnit.MILLISECONDS).max(100),
+            size = listOf(Size(40))
+        )
+        
+        val centerParty = Party(
+            speed = 0f,
+            maxSpeed = 30f,
+            damping = 0.9f,
+            spread = Spread.WIDE,
+            colors = listOf(0xfce18a, 0xff726d, 0xf4306d, 0xb48def),
+            position = Position.Relative(0.5, 0.0),
+            emitter = Emitter(duration = 2000, TimeUnit.MILLISECONDS).max(100),
+            size = listOf(Size(40))
+        )
+        
+        val rightParty = Party(
+            speed = 0f,
+            maxSpeed = 30f,
+            damping = 0.9f,
+            spread = Spread.WIDE,
+            colors = listOf(0xfce18a, 0xff726d, 0xf4306d, 0xb48def),
+            position = Position.Relative(1.0, 0.0),
+            emitter = Emitter(duration = 2000, TimeUnit.MILLISECONDS).max(100),
+            size = listOf(Size(40))
+        )
+
+        konfettiView.start(leftParty)
+        konfettiView.start(centerParty)
+        konfettiView.start(rightParty)
     }
 }
