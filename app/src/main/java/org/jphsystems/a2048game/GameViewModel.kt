@@ -23,8 +23,13 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private val _gameWon = MutableLiveData<Boolean>()
     val gameWon: LiveData<Boolean> = _gameWon
 
+    private val _canUndo = MutableLiveData<Boolean>() // Added
+    val canUndo: LiveData<Boolean> = _canUndo // Added
+
     init {
         setupGameCallbacks()
+        // startNewGame() is called after callbacks are set, which is good.
+        // GameManager's initializeGame will call onUndoStateChanged, handled by new callback.
         startNewGame()
     }
 
@@ -45,15 +50,26 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         gameManager.onGameWon = {
             _gameWon.postValue(true)
         }
+
+        gameManager.onUndoStateChanged = { canUndoValue -> // Added
+            _canUndo.postValue(canUndoValue)
+        }
     }
 
     fun startNewGame() {
         _gameOver.value = false
         _gameWon.value = false
+        // _canUndo will be set by GameManager's initializeGame via onUndoStateChanged callback
         gameManager.initializeGame()
     }
 
     fun move(direction: GameManager.Direction) {
         gameManager.move(direction)
+    }
+
+    fun undoMove() { // Added
+        gameManager.undoMove()
+        // The GameManager will call onUndoStateChanged callback,
+        // which will update the _canUndo LiveData.
     }
 }

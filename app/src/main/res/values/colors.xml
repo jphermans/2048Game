@@ -26,4 +26,37 @@
     <!-- Text Colors for Tiles -->
     <color name="tile_text_light">#776E65</color>  <!-- For tiles 2 and 4 -->
     <color name="tile_text_dark">#F9F6F2</color>   <!-- For tiles 8 and up -->
+
+    <!-- Light Theme Custom Attribute Colors -->
+    <color name="tile_default_background">#CDC1B4</color> <!-- For empty tiles in light mode -->
+    <color name="cell_background">#CDC1B4</color> <!-- Background for each cell (where tile sits) -->
+    <color name="app_background">#FAF8EF</color>
+    <color name="primary_text_light">#776E65</color>
+    <color name="secondary_text_light">#A59E94</color>
+    <color name="button_bg_light">#8F7A66</color>
+    <color name="button_text_light">#F9F6F2</color>
+    <color name="game_grid_bg_light">#BBADA0</color>
+
+    <!-- Dark Theme Colors -->
+    <color name="dark_background">#121212</color>
+    <color name="dark_surface">#1E1E1E</color> <!-- Used for elements like cards, sheets, and components -->
+    <color name="dark_primary">#BB86FC</color> <!-- A common primary color for dark themes -->
+    <color name="dark_on_surface">#FFFFFF</color> <!-- Text/icon color on dark_surface -->
+    <color name="dark_tile_default_background">#3A3A3C</color> <!-- Empty tile background in dark mode -->
+    <color name="dark_text_primary">#FFFFFF</color>
+    <color name="dark_text_secondary">#B0B0B0</color>
+    <color name="dark_button_bg">#BB86FC</color>
+    <color name="dark_button_text">#121212</color>
+    <color name="dark_game_grid_bg">#4A4A4C</color>
+    <color name="dark_cell_background">#2C2C2E</color>
+
+
+    <!-- Specific Tile Colors for Dark Theme (can be same or adjusted) -->
+    <!-- If you want different tile colors in dark mode, define them here -->
+    <!-- Example: <color name="dark_tile_2">#5C5C5E</color> -->
+    <!-- For now, we can try using the light theme tile colors and see how they look,
+         or define specific ones if needed. The tile text color will need to adapt. -->
+    <color name="dark_tile_text_light">#E0E0E0</color> <!-- For dark tiles with light text -->
+    <color name="dark_tile_text_dark">#121212</color>  <!-- For light tiles with dark text (e.g. high value tiles if their bg becomes light in dark theme) -->
+
 </resources>

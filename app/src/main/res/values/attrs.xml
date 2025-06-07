@@ -1,0 +1,25 @@
+<resources>
+    <attr name="tileBackgroundColor" format="color" />
+    <attr name="cellBackgroundColor" format="color" />
+    <attr name="textColorPrimary" format="color" />
+    <attr name="textColorSecondary" format="color" />
+    <attr name="buttonBackgroundColor" format="color"/>
+    <attr name="buttonTextColor" format="color"/>
+    <attr name="gameGridBackgroundColor" format="color" />
+    <attr name="defaultTileColor" format="color" />
+
+    <!-- Tile specific colors -->
+    <attr name="colorTile2" format="color" />
+    <attr name="colorTile4" format="color" />
+    <attr name="colorTile8" format="color" />
+    <attr name="colorTile16" format="color" />
+    <attr name="colorTile32" format="color" />
+    <attr name="colorTile64" format="color" />
+    <attr name="colorTile128" format="color" />
+    <attr name="colorTile256" format="color" />
+    <attr name="colorTile512" format="color" />
+    <attr name="colorTile1024" format="color" />
+    <attr name="colorTile2048" format="color" />
+    <attr name="colorTileTextLight" format="color" />
+    <attr name="colorTileTextDark" format="color" />
+</resources>
