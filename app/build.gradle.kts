@@ -57,6 +57,8 @@ dependencies {
     implementation("androidx.dynamicanimation:dynamicanimation-ktx:1.0.0-alpha03")
     
     testImplementation(libs.junit)
+    testImplementation("org.mockito:mockito-core:4.5.1")
+    // testImplementation("androidx.arch.core:core-testing:2.1.0") // For LiveData if needed later
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

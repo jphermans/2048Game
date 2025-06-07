@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var gameOverText: TextView
     private lateinit var konfettiView: KonfettiView
     private lateinit var titleTextView: TextView
+    private lateinit var undoButton: android.widget.Button // Added
     private val tiles = Array(4) { Array<TextView?>(4) { null } }
     private var lastMoveTime = 0L
     private val MOVE_DELAY = 150L // Minimum time between moves in milliseconds
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         setupTouchHandling()
         setupObservers()
         setupNewGameButton()
+        setupUndoButton() // Added
     }
 
     private fun initializeViews() {
@@ -53,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         gameOverText = findViewById(R.id.gameOverText)
         konfettiView = findViewById(R.id.konfettiView)
         titleTextView = findViewById(R.id.titleTextView)
+        undoButton = findViewById(R.id.undoButton) // Added
 
         setupTitleLongPress()
 
@@ -155,13 +158,25 @@ class MainActivity : AppCompatActivity() {
                 celebrateWin()
             }
         }
+
+        viewModel.canUndo.observe(this) { canUndo -> // Added
+            undoButton.isEnabled = canUndo
+        }
     }
 
     private fun setupNewGameButton() {
         findViewById<View>(R.id.newGameButton).setOnClickListener {
             viewModel.startNewGame()
             gameOverText.visibility = View.GONE
+            // Consider disabling undo button here as well, though GameViewModel should handle it
         }
+    }
+
+    private fun setupUndoButton() { // Added
+        undoButton.setOnClickListener {
+            viewModel.undoMove()
+        }
+        undoButton.isEnabled = false // Initially disabled
     }
 
     private fun updateGrid(grid: Array<Array<Int>>) {
@@ -182,24 +197,43 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateTileAppearance(tile: TextView?, value: Int) {
-        val colorResId = when (value) {
-            2 -> R.color.tile_2
-            4 -> R.color.tile_4
-            8 -> R.color.tile_8
-            16 -> R.color.tile_16
-            32 -> R.color.tile_32
-            64 -> R.color.tile_64
-            128 -> R.color.tile_128
-            256 -> R.color.tile_256
-            512 -> R.color.tile_512
-            1024 -> R.color.tile_1024
-            2048 -> R.color.tile_2048
-            else -> R.color.tile_2048
+        val tileBgAttr = when (value) {
+            2 -> R.attr.colorTile2
+            4 -> R.attr.colorTile4
+            8 -> R.attr.colorTile8
+            16 -> R.attr.colorTile16
+            32 -> R.attr.colorTile32
+            64 -> R.attr.colorTile64
+            128 -> R.attr.colorTile128
+            256 -> R.attr.colorTile256
+            512 -> R.attr.colorTile512
+            1024 -> R.attr.colorTile1024
+            2048 -> R.attr.colorTile2048
+            else -> R.attr.colorTile2048 // Default for higher values or unexpected
         }
 
-        tile?.setBackgroundColor(ContextCompat.getColor(this, colorResId))
-        tile?.setTextColor(ContextCompat.getColor(this, 
-            if (value <= 4) R.color.tile_text_light else R.color.tile_text_dark))
+        val textColorAttr = if (value <= 4) R.attr.colorTileTextLight else R.attr.colorTileTextDark
+        // For dark theme, this logic might need to be more sophisticated if tile backgrounds change drastically
+        // For example, if tile 8 becomes dark background in dark theme, it would need light text.
+        // The themes.xml for -night currently points colorTileTextDark to R.color.text_dark (a light color on dark bg in original design)
+        // and colorTileTextLight to R.color.dark_tile_text_light (a light color).
+        // This means R.attr.colorTileTextDark should resolve to a color suitable for light backgrounds,
+        // and R.attr.colorTileTextLight for dark backgrounds.
+        // The current light theme has tile_text_light (dark text for 2,4) and tile_text_dark (light text for 8+).
+        // The dark theme has dark_tile_text_light (light text) and text_dark (which is R.color.text_dark from light theme - #776E65).
+        // This setup is a bit confusing. Let's assume:
+        // - colorTileTextLight is for tiles that have a darker background (e.g. 2, 4 in light theme; potentially many in dark theme if we use dark backgrounds for tiles).
+        // - colorTileTextDark is for tiles that have a lighter background (e.g. 8+ in light theme).
+
+        val typedValue = android.util.TypedValue()
+
+        theme.resolveAttribute(tileBgAttr, typedValue, true)
+        val tileBgColor = typedValue.data
+        tile?.setBackgroundColor(tileBgColor)
+
+        theme.resolveAttribute(textColorAttr, typedValue, true)
+        val textColor = typedValue.data
+        tile?.setTextColor(textColor)
     }
 
     private fun setupTitleLongPress() {

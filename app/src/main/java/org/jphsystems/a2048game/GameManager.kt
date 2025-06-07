@@ -14,9 +14,14 @@ class GameManager(context: Context) {
     private var highScore: Int = 0
     private var hasWonGame: Boolean = false
     private var emptyCells: MutableSet<Pair<Int, Int>> = mutableSetOf()
+
+    private var previousGrid: Array<Array<Int>>? = null
+    private var previousScore: Int = 0
+    private var previousHasWonGame: Boolean = false
     
     var onGridUpdated: ((Array<Array<Int>>) -> Unit)? = null
     var onScoreUpdated: ((Int) -> Unit)? = null
+    var onUndoStateChanged: ((Boolean) -> Unit)? = null
     var onGameOver: (() -> Unit)? = null
     var onGameWon: (() -> Unit)? = null
 
@@ -68,6 +73,9 @@ class GameManager(context: Context) {
         grid = Array(GRID_SIZE) { Array(GRID_SIZE) { 0 } }
         score = 0
         hasWonGame = false
+        previousGrid = null
+        previousScore = 0
+        previousHasWonGame = false
         emptyCells.clear()
         // Add all cells as empty initially
         for (i in 0 until GRID_SIZE) {
@@ -79,6 +87,7 @@ class GameManager(context: Context) {
         addNewTile()
         onGridUpdated?.invoke(grid)
         onScoreUpdated?.invoke(score)
+        onUndoStateChanged?.invoke(false) // Cannot undo at the start of a new game
         saveGameState()
     }
 
@@ -103,13 +112,76 @@ class GameManager(context: Context) {
 
     fun move(direction: Direction): Boolean {
         var moved = false
-        val beforeMove = grid.map { it.clone() }.toTypedArray()
+        val beforeMoveGrid = grid.map { it.clone() }.toTypedArray() // For checking if actual move happened
+        var canMove = false // To determine if we should save state for undo
+
+        // First, check if any move is possible and will change the grid state
+        // This is a simplified check. A more robust check would simulate the move.
+        // For now, we'll assume if a line can be moved/merged, the grid *might* change.
+        // A more accurate check would be to see if the grid *actually* changes.
+        val tempGrid = grid.map { it.clone() }.toTypedArray()
+        val tempScore = score
+        val tempHasWonGame = hasWonGame
+
+        // Simulate the move to see if the grid actually changes
+        val simulatedMoved = when (direction) {
+            Direction.UP -> {
+                var simMoved = false
+                for (col in 0 until GRID_SIZE) {
+                    val column = Array(GRID_SIZE) { row -> tempGrid[row][col] }
+                    if (moveAndMergeLineInternal(column, false)) { // Simulate without updating score
+                        simMoved = true
+                    }
+                }
+                simMoved
+            }
+            Direction.DOWN -> {
+                var simMoved = false
+                for (col in 0 until GRID_SIZE) {
+                    val column = Array(GRID_SIZE) { row -> tempGrid[row][col] }
+                    column.reverse()
+                    if (moveAndMergeLineInternal(column, false)) { // Simulate without updating score
+                        simMoved = true
+                    }
+                }
+                simMoved
+            }
+            Direction.LEFT -> {
+                var simMoved = false
+                for (row in 0 until GRID_SIZE) {
+                    val line = tempGrid[row].clone()
+                    if (moveAndMergeLineInternal(line, false)) { // Simulate without updating score
+                        simMoved = true
+                    }
+                }
+                simMoved
+            }
+            Direction.RIGHT -> {
+                var simMoved = false
+                for (row in 0 until GRID_SIZE) {
+                    val line = tempGrid[row].clone()
+                    line.reverse()
+                    if (moveAndMergeLineInternal(line, false)) { // Simulate without updating score
+                        simMoved = true
+                    }
+                }
+                simMoved
+            }
+        }
+
+        if (simulatedMoved) {
+            // If a move is possible, save the current state for undo
+            previousGrid = grid.map { it.clone() }.toTypedArray()
+            previousScore = score
+            previousHasWonGame = hasWonGame
+        }
+
 
         when (direction) {
             Direction.UP -> {
                 for (col in 0 until GRID_SIZE) {
                     val column = getColumn(col)
-                    if (moveAndMergeLine(column)) {
+                    if (moveAndMergeLineInternal(column, true)) { // Apply actual score change
                         moved = true
                     }
                     setColumn(col, column)
@@ -119,7 +191,7 @@ class GameManager(context: Context) {
                 for (col in 0 until GRID_SIZE) {
                     val column = getColumn(col)
                     column.reverse()
-                    if (moveAndMergeLine(column)) {
+                    if (moveAndMergeLineInternal(column, true)) { // Apply actual score change
                         moved = true
                     }
                     column.reverse()
@@ -128,7 +200,7 @@ class GameManager(context: Context) {
             }
             Direction.LEFT -> {
                 for (row in 0 until GRID_SIZE) {
-                    if (moveAndMergeLine(grid[row])) {
+                    if (moveAndMergeLineInternal(grid[row], true)) { // Apply actual score change
                         moved = true
                     }
                 }
@@ -136,7 +208,7 @@ class GameManager(context: Context) {
             Direction.RIGHT -> {
                 for (row in 0 until GRID_SIZE) {
                     grid[row].reverse()
-                    if (moveAndMergeLine(grid[row])) {
+                    if (moveAndMergeLineInternal(grid[row], true)) { // Apply actual score change
                         moved = true
                     }
                     grid[row].reverse()
@@ -145,10 +217,11 @@ class GameManager(context: Context) {
         }
 
         if (moved) {
-            updateEmptyCellsFromMove(beforeMove)
+            updateEmptyCellsFromMove(beforeMoveGrid) // Use the grid state from *before* this move
             addNewTile()
             onGridUpdated?.invoke(grid)
             onScoreUpdated?.invoke(score)
+            onUndoStateChanged?.invoke(previousGrid != null)
             saveGameState()
 
             if (!hasWonGame && hasWon()) {
@@ -216,7 +289,8 @@ class GameManager(context: Context) {
         return false
     }
 
-    private fun moveAndMergeLine(line: Array<Int>): Boolean {
+    // Renamed to moveAndMergeLineInternal and added updateScore parameter
+    private fun moveAndMergeLineInternal(line: Array<Int>, updateScore: Boolean): Boolean {
         var moved = false
         
         // Step 1: Move all numbers to the beginning (left/up), removing gaps
@@ -232,8 +306,10 @@ class GameManager(context: Context) {
         while (i < numbers.size - 1) {
             if (numbers[i] == numbers[i + 1]) {
                 numbers[i] *= 2
-                score += numbers[i]
-                updateHighScore(score)
+                if (updateScore) {
+                    score += numbers[i]
+                    updateHighScore(score)
+                }
                 numbers.removeAt(i + 1)
                 moved = true
                 // Don't increment i here, so we can check if the newly merged number
@@ -297,6 +373,29 @@ class GameManager(context: Context) {
 
     fun getGrid(): Array<Array<Int>> = grid.map { it.clone() }.toTypedArray()
     fun getScore(): Int = score
+
+    fun undoMove(): Boolean {
+        if (previousGrid != null) {
+            grid = previousGrid!!.map { it.clone() }.toTypedArray()
+            score = previousScore
+            hasWonGame = previousHasWonGame
+
+            updateEmptyCells() // Recalculate empty cells based on restored grid
+
+            onGridUpdated?.invoke(grid)
+            onScoreUpdated?.invoke(score)
+
+            // If the game was won and we undo, it might not be won anymore
+            // This is handled by restoring hasWonGame. If a specific "game won" message
+            // needs to be un-triggered, that would require an additional callback or logic.
+
+            previousGrid = null // Prevent multiple undos from the same state
+            onUndoStateChanged?.invoke(false)
+            saveGameState() // Save the reverted state
+            return true
+        }
+        return false
+    }
 
     enum class Direction {
         UP, DOWN, LEFT, RIGHT

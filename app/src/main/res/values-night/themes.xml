@@ -1,7 +1,44 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme._2048Game" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
-    </style>
+  <!-- Base application theme for dark mode. -->
+  <style name="Base.Theme.A2048Game" parent="Theme.Material3.DayNight.NoActionBar">
+    <!-- Primary brand color. -->
+    <item name="colorPrimary">@color/dark_primary</item>
+    <!-- Status bar color. -->
+    <item name="android:statusBarColor" tools:targetApi="l">?attr/colorSurface</item>
+    <!-- Background color -->
+    <item name="android:windowBackground">@color/dark_background</item>
+    <item name="colorSurface">@color/dark_surface</item>
+    <item name="colorOnSurface">@color/dark_on_surface</item>
+
+    <!-- Custom attributes for app-specific theming -->
+    <item name="tileBackgroundColor">@color/dark_tile_default_background</item> <!-- For empty tiles -->
+    <item name="cellBackgroundColor">@color/dark_cell_background</item> <!-- For the cell containing the tile -->
+    <item name="gameGridBackgroundColor">@color/dark_game_grid_bg</item> <!-- For the main grid background -->
+    <item name="defaultTileColor">@color/dark_tile_default_background</item>
+
+    <item name="textColorPrimary">@color/dark_text_primary</item>
+    <item name="textColorSecondary">@color/dark_text_secondary</item>
+
+    <item name="buttonBackgroundColor">@color/dark_button_bg</item>
+    <item name="buttonTextColor">@color/dark_button_text</item>
+
+    <!-- Tile specific colors -->
+    <item name="colorTile2">@color/tile_2</item> <!-- Using light color for now, can change to dark_tile_2 if defined -->
+    <item name="colorTile4">@color/tile_4</item>
+    <item name="colorTile8">@color/tile_8</item>
+    <item name="colorTile16">@color/tile_16</item>
+    <item name="colorTile32">@color/tile_32</item>
+    <item name="colorTile64">@color/tile_64</item>
+    <item name="colorTile128">@color/tile_128</item>
+    <item name="colorTile256">@color/tile_256</item>
+    <item name="colorTile512">@color/tile_512</item>
+    <item name="colorTile1024">@color/tile_1024</item>
+    <item name="colorTile2048">@color/tile_2048</item>
+    <!-- if colorTile2, colorTile4 (which are light) are used in dark mode, they need dark text -->
+    <item name="colorTileTextLight">@color/text_dark</item> <!-- text_dark is #776E65 -->
+    <!-- if colorTile8 etc (which are darker) are used in dark mode, they need light text -->
+    <item name="colorTileTextDark">@color/dark_tile_text_light</item> <!-- dark_tile_text_light is #E0E0E0 -->
+  </style>
+
+  <style name="Theme.A2048Game" parent="Base.Theme.A2048Game" />
 </resources>

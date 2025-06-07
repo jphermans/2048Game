@@ -1,9 +1,41 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme._2048Game" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-    </style>
+  <!-- Base application theme for light mode. -->
+  <style name="Base.Theme.A2048Game" parent="Theme.Material3.DayNight.NoActionBar">
+    <!-- Default Material Components colors -->
+    <item name="colorPrimary">@color/button_bg_light</item> <!-- Using one of the app's existing primary-like colors -->
+    <item name="colorOnPrimary">@color/button_text_light</item>
+    <item name="colorSurface">@color/app_background</item> <!-- Or white/grey for surface -->
+    <item name="colorOnSurface">@color/primary_text_light</item>
+    <item name="android:windowBackground">@color/app_background</item>
+    <item name="android:statusBarColor" tools:targetApi="l">?attr/colorSurface</item>
 
-    <style name="Theme._2048Game" parent="Base.Theme._2048Game" />
+    <!-- Custom attributes for app-specific theming -->
+    <item name="tileBackgroundColor">@color/tile_default_background</item> <!-- For empty tiles -->
+    <item name="cellBackgroundColor">@color/cell_background</item> <!-- For the cell containing the tile -->
+    <item name="gameGridBackgroundColor">@color/game_grid_bg_light</item> <!-- For the main grid background -->
+    <item name="defaultTileColor">@color/tile_default_background</item>
+
+    <item name="textColorPrimary">@color/primary_text_light</item>
+    <item name="textColorSecondary">@color/secondary_text_light</item>
+
+    <item name="buttonBackgroundColor">@color/button_bg_light</item>
+    <item name="buttonTextColor">@color/button_text_light</item>
+
+    <!-- Tile specific colors from colors.xml -->
+    <item name="colorTile2">@color/tile_2</item>
+    <item name="colorTile4">@color/tile_4</item>
+    <item name="colorTile8">@color/tile_8</item>
+    <item name="colorTile16">@color/tile_16</item>
+    <item name="colorTile32">@color/tile_32</item>
+    <item name="colorTile64">@color/tile_64</item>
+    <item name="colorTile128">@color/tile_128</item>
+    <item name="colorTile256">@color/tile_256</item>
+    <item name="colorTile512">@color/tile_512</item>
+    <item name="colorTile1024">@color/tile_1024</item>
+    <item name="colorTile2048">@color/tile_2048</item>
+    <item name="colorTileTextLight">@color/tile_text_light</item> <!-- For 2 & 4 -->
+    <item name="colorTileTextDark">@color/tile_text_dark</item>   <!-- For 8+ -->
+  </style>
+
+  <style name="Theme.A2048Game" parent="Base.Theme.A2048Game" />
 </resources>
